@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--Author: Jan van der Meiden                                            -->
+<!--Version: 20160304:00                                                  -->
+<!--Copyright (c) 2016 Jan van der Meiden.                                -->
+<!--Copying and distribution of this file, with or without modification,  -->
+<!--are permitted in any medium without royalty provided the copyright-   -->
+<!--notice and this notice are preserved.  This file is offered as-is,    -->
+<!--without any warranty.                                                 -->
+
+<head>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113123312-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113123312-1');
+</script>
+
+  <title>Seed Spirals</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body >
+<div class="container">
+  <div class="row">
+  <div class="col-sm-4">
+  <h1>Seed Spirals</h1>
+  <form>
+    <fieldset>
+    <legend>Parameters</legend>
+    <label class="name">Scale:</label>	
+    <input class="button" type="number" id="scale" name="scale" value="6"/>
+    <label class="name">ColorSteps:</label>	
+    <input class="button" type="number" id="inc" name="inc" value="7"/>
+    <label class="name">Factor (in Javascript notation, eg Math.PI):</label>
+    <input class="button" type="text" id="factor" name="factor" list="factorList" value="(1+Math.sqrt(5))/2"/>
+    <datalist id="factorList">
+      <option value="1/7">
+      <option value="Math.PI">
+      <option value="Math.sqrt(3)">
+      <option value="(1+Math.sqrt(5))/2">
+      <option value="Math.E">
+      <option value="Math.sqrt(511)">
+    </datalist>
+    <p><input type="button" class="button" value="Run" onclick="submitFactor();" />
+       <input type="button" class="button" value="Stop" onclick="stopSpiral();" />
+       <input type="button" class="button" value="Continue" onclick="cont();" /></p>
+    </fieldset>
+  </form>
+  </div>
+  <div class="col-sm-8">
+  <div class="map">
+
+<svg xmlns="http://www.w3.org/2000/svg" onload="startup(evt)" style="background-color: rgb(10,10,10)" width="850" height="850"> 
+<!-- Author: Jan van der Meiden                                           -->
+<!-- jvdmeiden@gmail.com                                                  -->
+<!-- Version: 20141108.00                                                 -->
+<!-- Copyright (c) 2014 Jan van der Meiden.                               -->
+<!-- Copying and distribution of this file, with or without modification, -->
+<!-- are permitted in any medium without royalty provided the copyright   -->
+<!-- notice and this notice are preserved.                                -->
+
+<script><![CDATA[
+var SVGDoc = null;
+var svgns = 'http://www.w3.org/2000/svg';
+var offsetX = 425;
+var offsetY = 425;
+var myFactor = 0;
+var myInc = 0;
+var steps = 0;
+var fib = 0;
+var stop = false;
+
+function stopSpiral(){
+  stop=true;
+}
+
+function cont(){
+  stop=false;
+  tick();
+}
+
+function tick(evt){
+  steps = steps + 1; 
+  
+  NewDot = SVGDoc.createElementNS(svgns,"circle"); 
+  var cx=(Math.sqrt(steps)*scale)*Math.cos(2*Math.PI*myFactor*steps);
+  var cy=(Math.sqrt(steps)*scale)*Math.sin(2*Math.PI*myFactor*steps);
+  NewDot.setAttribute("cx", offsetX+cx); 
+  NewDot.setAttribute("cy", offsetY+cy); 
+  NewDot.setAttribute("r", scale/2); 
+  NewDot.setAttribute("opacity", 0.8); 
+  NewDot.setAttribute("fill","rgb(0,"+parseInt((steps%myInc)*255/myInc)+",255)"); 
+  dotRoot.appendChild(NewDot); 
+  if ((cx*cx+cy*cy)<(offsetX*offsetX+offsetY*offsetY)&&stop==false){
+    t=setTimeout("tick()",0); 
+  }
+}   
+
+function submitFactor(evt){
+  element = document.getElementById("Dots");
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+  steps =0;
+  myFactor=(eval(document.getElementById( 'factor' ).value));
+  myInc=(eval(document.getElementById( 'inc' ).value));
+  scale=(eval(document.getElementById( 'scale' ).value));
+  setTimeout("tick()",0);
+}
+
+function startup(evt){
+  SVGDoc = evt.target.ownerDocument;
+  dotRoot = SVGDoc.getElementById("Dots"); 
+}
+
+function toggleField(fieldName,nameIndex){
+  var hideObj=document.getElementsByName(fieldName)[nameIndex];
+  var showObj=document.getElementsByName(fieldName)[1-nameIndex];
+  hideObj.disabled=true;        
+  hideObj.style.display='none';
+  showObj.disabled=false;   
+  showObj.style.display='inline';
+  showObj.focus();
+}
+
+]]></script> 
+ <g id="Dots">
+ </g>
+
+
+  </div>
+  </div>
+<div class="bottom">
+    &copy; <a href="mailto:jvdmeiden@gmail.com">Jan van der Meiden</a> 2015 -- Based on: <a href="http://www.mike-naylor.com/resources/naylor-seeds.pdf">'Seed Spirals' by Michael Naylor</a> 
+</div>
+</div>
+</html>
